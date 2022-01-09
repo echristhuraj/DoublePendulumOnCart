@@ -10,3 +10,20 @@
 %
 % Copyright (c) 2022 Edwin Christhuraj.
 % See LICENSE for terms.
+
+clear;
+
+%% Main Parameters
+%Initial State
+X = [0;     %x_0
+     0;     %x_dot_0
+     0;     %θ_1
+     0;     %θ_dot_1
+     0;     %θ_2
+     0];    %θ_dot_2
+
+%% Main Setup
+
+
+%% Main Simulation
+
