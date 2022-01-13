@@ -32,20 +32,30 @@ zlabel('z');
 view(3);
 axis equal;
 camlight;
-cylndr('x', 0.25, 20, 0.25, [0.5, 0.5, 0.5], 50);
+cylndr('x', 0, 0.25, 20, 0.25, [0.5, 0.5, 0.5], 50);
+cylndr('z', 0, 0.25, 11, 0.25, 'none', 50);
 cartTrnsfrm = hgtransform;
-set(cart(), 'Parent', cartTrnsfrm);
+set(cart([0.72, 0.45, 0.2], [0.83, 0.69, 0.22], 50), 'Parent', cartTrnsfrm);
+pndulm1Trnsfrm = hgtransform;
+set(pndulm(2.5, [0.5, 0.5, 0.5], [0, 1, 0], 50), 'Parent', pndulm1Trnsfrm);
+pndulm1Trnsfrm.Matrix = makehgtform('translate', [0, -0.5, 0]);
+pndulm2Trnsfrm = hgtransform;
+set(pndulm(2.5, [0.5, 0.5, 0.5], [1, 0, 0], 50), 'Parent', pndulm2Trnsfrm);
+pndulm2Trnsfrm.Matrix = makehgtform('translate', [0, -0.5, 2.5]);
 hold(axes, 'off');
 
 %% Main Simulation
 % pause(1);
 % t = 0;
 % x = 0;
-% while (t <= 2*pi)
+% while (t <= 8*pi)
 %     cartTrnsfrm.Matrix = makehgtform('translate', [-x, 0, 0]);
-%     x = sin(t);
+%     pndulm1Trnsfrm.Matrix = makehgtform('translate', [-x, 0.5, 0]);
+%     pndulm2Trnsfrm.Matrix = makehgtform('translate', [-x, 0.5, -2.5]);
+%     x = 5 * sin(t);
 %     cartTrnsfrm.Matrix = makehgtform('translate', [x, 0, 0]);
+%     pndulm1Trnsfrm.Matrix = makehgtform('translate', [x, -0.5, 0], 'axisrotate', [0, -1, 0], t);
+%     pndulm2Trnsfrm.Matrix = makehgtform('translate', [x, -0.5, 2.5], 'axisrotate', [0, -1, 0], t);
 %     drawnow;
-%     t = t + 0.01;
-% %     pause(0.05);
+%     t = t + 0.05;
 % end

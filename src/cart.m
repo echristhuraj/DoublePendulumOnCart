@@ -1,3 +1,4 @@
-function grphcs = cart()
-    grphcs = [cylndr('x', 0.36, 0.75, 0.1, [0.72, 0.45, 0.2], 50), cylndr('y', 0.05, 1, 0.05, [0.83, 0.69, 0.22], 50)];
+function grphcs = cart(cartColr, axleColr, mshDnsty)
+    grphcs(1:4) = cylndr('x', 0, 0.35, 0.75, 0.1, cartColr, mshDnsty);
+    grphcs(5:8) = cylndr('y', -0.25, 0.05, 0.4, 0.05, axleColr, mshDnsty);
 end
