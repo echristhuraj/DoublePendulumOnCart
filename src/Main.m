@@ -19,15 +19,15 @@ clear;
 %Initial Conditions
 X = [0;
      0;
-     0.1;
      0;
      0;
-     0];
+     0;
+     0.01];
 u = [0;
      0];
 
 %Physical Properties
-railLngth = 20;
+railLngth = 100;
 g = 9.81;
 m0 = 0.5;
 m1 = 0.02;
@@ -42,8 +42,9 @@ pndulmBeamColr = [0.5, 0.5, 0.5];
 m1Colr = [0.72, 0.45, 0.2];
 m2Colr = [0.72, 0.45, 0.2];
 
-%Simulation UI Parameters
+%Simulation Parameters
 viewSettng = "2D";
+simDuratn = 60;
 
 %% Main Setup
 comp_scrn_size = get(0, 'ScreenSize');
@@ -51,18 +52,19 @@ simUI = figure('Name', 'Double Pendulum On Cart', 'Position', [comp_scrn_size(3)
 panel = uipanel('Parent', simUI);
 set(panel, 'BackgroundColor', 'k');
 axes = axes('Parent', panel);
-set(axes, 'Visible', 'on', 'Color', 'k', 'xcolor', 'w', 'ycolor', 'w', 'zcolor', 'w', 'Clipping', 'off');
+set(axes, 'Visible', 'on', 'Color', 'k', 'xcolor', 'w', 'ycolor', 'w', 'zcolor', 'w');
 hold(axes, 'on');
 xlabel('x');
 ylabel('y');
 zlabel('z');
 view(double(viewSettng == "3D") * [-37.5, 30] + double(viewSettng == "2D") * [0, 0]);
 axis equal;
+defltViewRnge = (l1 + l2 + 1) .* [-1, 1];
+axis([defltViewRnge + X(1), -0.75, 0.35, defltViewRnge]);
 box on;
 grid on;
 camlight;
 cylndr('x', 0, 0.25, railLngth, 0.25, [0.5, 0.5, 0.5], mshDnsty);
-cylndr('z', 0, 0.25, 2 * (l1 + l2) + 1, 0.25, 'none', mshDnsty);
 cartTrnsfrm = hgtransform;
 set(cart(cartColr, [0.5, 0.5, 0.5], mshDnsty), 'Parent', cartTrnsfrm);
 cartTrnsfrm.Matrix = makehgtform('translate', [X(1), 0, 0]);
@@ -76,13 +78,14 @@ hold(axes, 'off');
 
 %% Main Simulation
 ti = 0;
-tf = 30;
-[tOut, XOut] = ode45(@(t, X) f(X, u, g, m0, m1, m2, l1, l2), [ti, tf], X);
+tf = simDuratn;
+[t, Y] = ode45(@(t, X) f(X, u, g, m0, m1, m2, l1, l2), [ti, tf], X);
 
 pause(1);
-for i = 2:size(tOut, 1)
-    pause(tOut(i) - tOut(i - 1));
-    cartTrnsfrm.Matrix = makehgtform('translate', [XOut(i, 1), 0, 0]);
-    pndulm1Trnsfrm.Matrix = makehgtform('translate', [XOut(i, 1), -0.5, 0], 'axisrotate', [0, 1, 0], XOut(i, 3));
-    pndulm2Trnsfrm.Matrix = makehgtform('translate', [XOut(i, 1) + l1 * sin(XOut(i, 3)), -0.5, l1 * cos(XOut(i, 3))], 'axisrotate', [0, 1, 0], XOut(i, 5));
+for i = 2:size(t, 1)
+    pause(t(i) - t(i - 1));
+    cartTrnsfrm.Matrix = makehgtform('translate', [Y(i, 1), 0, 0]);
+    pndulm1Trnsfrm.Matrix = makehgtform('translate', [Y(i, 1), -0.5, 0], 'axisrotate', [0, 1, 0], Y(i, 3));
+    pndulm2Trnsfrm.Matrix = makehgtform('translate', [Y(i, 1) + l1 * sin(Y(i, 3)), -0.5, l1 * cos(Y(i, 3))], 'axisrotate', [0, 1, 0], Y(i, 5));
+    xlim(defltViewRnge + Y(i, 1));
 end
